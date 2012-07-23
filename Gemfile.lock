@@ -1,0 +1,18 @@
+PATH
+  remote: .
+  specs:
+    semantic (1.0.0)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    minitest (3.2.0)
+    rake (0.9.2.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  minitest (~> 3.2.0)
+  rake (~> 0.9.2.2)
+  semantic!
