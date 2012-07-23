@@ -96,6 +96,25 @@ describe Semantic::Version do
       @v4.should < @v2
       @v3.should < @v4
     end
+
+    it "determines whether it is greater than or equal to another instance" do
+      @v1.should >= @v1
+      @v1.should_not >= @v2
+      @v4.should >= @v3
+      @v2.should >= @v4
+    end
+
+    it "determines whether it is less than or equal to another instance" do
+      @v1.should <= @v2
+      @v4.should_not <= $v3
+      @v2.should <= @v2
+      @v3.should_not <= @v1
+    end
+
+    it "determines whether it is exactly equal to another instance" do
+      @v1.should == @v1.dup
+      @v2.should == @v2.dup
+    end
   end
 
   context "type coercions" do

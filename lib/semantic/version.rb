@@ -53,6 +53,18 @@ class Semantic::Version
     if (self <=> other_version) == -1 then true else false end
   end
 
+  def >= other_version
+    if (self <=> other_version) >= 0 then true else false end
+  end
+
+  def <= other_version
+    if (self <=> other_version) <= 0 then true else false end
+  end
+
+  def == other_version
+    if (self <=> other_version) == 0 then true else false end
+  end
+
   private
 
   def compare_recursively ary1, ary2
