@@ -1,5 +1,5 @@
 require 'rake/clean'
-require 'rake/testtask'
+require 'rspec/core/rake_task'
 require 'bundler/gem_tasks'
 
 CLOBBER.include 'pkg'
@@ -7,8 +7,7 @@ CLEAN.include 'pkg/*.gem'
 
 task :distclean => [:clean, :clobber]
 
-Rake::TestTask.new do |t|
-  t.pattern = "test/*_test.rb"
-end
-task :default => :test
+desc "Run all specs"
+RSpec::Core::RakeTask.new
+task :default => :spec
 
