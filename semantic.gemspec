@@ -12,6 +12,7 @@ Gem::Specification.new do |s|
   s.homepage      = "https://github.com/jlindsey/semantic"
   s.summary       = %q{Semantic Version utility class}
   s.description   = %q{Semantic Version utility class for parsing, storing, and comparing versions. See: http://semver.org}
+  s.license       = 'MIT'
 
   s.files         = FileList['lib/**/*.rb']
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
