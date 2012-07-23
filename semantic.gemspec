@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.description   = %q{Semantic Version utility class for parsing, storing, and comparing versions. See: http://semver.org}
   s.license       = 'MIT'
 
-  s.files         = FileList['lib/**/*.rb']
+  s.files         = FileList['lib/**/*.rb', 'LICENSE', 'README.md']
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.require_paths = ["lib"]
 
