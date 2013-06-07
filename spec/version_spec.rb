@@ -67,72 +67,81 @@ describe Semantic::Version do
 
   context "comparisons" do
     before(:each) do
-      @v1 = Semantic::Version.new '1.5.9-pre.1'
-      @v2 = Semantic::Version.new '1.5.9-pre.1+build.5127'
-      @v3 = Semantic::Version.new '1.5.9'
-      @v4 = Semantic::Version.new '1.6.0'
+      # These three are all semantically equivalent, according to the spec.
+      @v1_5_9_pre_1 = Semantic::Version.new '1.5.9-pre.1'
+      @v1_5_9_pre_1_build_5127 = Semantic::Version.new '1.5.9-pre.1+build.5127'
+      @v1_5_9_pre_1_build_4352 = Semantic::Version.new '1.5.9-pre.1+build.4352'
+
+      @v1_5_9 = Semantic::Version.new '1.5.9'
+      @v1_6_0 = Semantic::Version.new '1.6.0'
     end
 
     it "determines sort order" do
       # The second parameter here can be a string, so we want to ensure that this kind of comparison works also.
-      (@v1 <=> @v1.to_s).should == 0
+      (@v1_5_9_pre_1 <=> @v1_5_9_pre_1.to_s).should == 0
 
-      (@v1 <=> @v2).should == 0
-      (@v1 <=> @v3).should == -1
-      (@v2 <=> @v3).should == -1
+      (@v1_5_9_pre_1 <=> @v1_5_9_pre_1_build_5127).should == 0
+      (@v1_5_9_pre_1 <=> @v1_5_9).should == -1
+      (@v1_5_9_pre_1_build_5127 <=> @v1_5_9).should == -1
 
-      (@v3 <=> @v3).should == 0
+      (@v1_5_9 <=> @v1_5_9).should == 0
 
-      (@v3 <=> @v4).should == -1
-      (@v4 <=> @v3).should == 1
-      (@v4 <=> @v1).should == 1
-      (@v1 <=> @v4).should == -1
+      (@v1_5_9 <=> @v1_6_0).should == -1
+      (@v1_6_0 <=> @v1_5_9).should == 1
+      (@v1_6_0 <=> @v1_5_9_pre_1).should == 1
+      (@v1_5_9_pre_1 <=> @v1_6_0).should == -1
 
-      [@v1, @v2, @v3, @v4].reverse.sort.should == [@v1, @v2, @v3, @v4]
+      [@v1_5_9_pre_1, @v1_5_9_pre_1_build_5127, @v1_5_9, @v1_6_0]
+        .reverse
+        .sort
+        .should == [@v1_5_9_pre_1, @v1_5_9_pre_1_build_5127, @v1_5_9, @v1_6_0]
     end
 
     it "determines whether it is greater than another instance" do
       # These should be equal, since "Build metadata SHOULD be ignored when determining version precedence".
       # (SemVer 2.0.0-rc.2, paragraph 10 - http://www.semver.org)
-      @v1.should_not > @v2
-      @v1.should_not < @v2
+      @v1_5_9_pre_1.should_not > @v1_5_9_pre_1_build_5127
+      @v1_5_9_pre_1.should_not < @v1_5_9_pre_1_build_5127
 
-      @v4.should > @v3
-      @v3.should_not > @v4
-      @v3.should > @v2
-      @v3.should > @v1
+      @v1_6_0.should > @v1_5_9
+      @v1_5_9.should_not > @v1_6_0
+      @v1_5_9.should > @v1_5_9_pre_1_build_5127
+      @v1_5_9.should > @v1_5_9_pre_1
     end
 
     it "determines whether it is less than another instance" do
-      pending
-
-      @v1.should < @v2
-      @v2.should_not < @v4
-      @v4.should < @v2
-      @v3.should < @v4
+      @v1_5_9_pre_1.should_not < @v1_5_9_pre_1_build_5127
+      @v1_5_9_pre_1_build_5127.should_not < @v1_5_9_pre_1
+      @v1_5_9_pre_1.should < @v1_5_9
+      @v1_5_9_pre_1.should < @v1_6_0
+      @v1_5_9_pre_1_build_5127.should < @v1_6_0
+      @v1_5_9.should < @v1_6_0
     end
 
     it "determines whether it is greater than or equal to another instance" do
-      pending
-
-      @v1.should >= @v1
-      @v1.should_not >= @v2
-      @v4.should >= @v3
-      @v2.should >= @v4
+      @v1_5_9_pre_1.should >= @v1_5_9_pre_1
+      @v1_5_9_pre_1.should >= @v1_5_9_pre_1_build_5127
+      @v1_5_9_pre_1_build_5127.should >= @v1_5_9_pre_1
+      @v1_5_9.should >= @v1_5_9_pre_1
+      @v1_6_0.should >= @v1_5_9
+      @v1_5_9_pre_1_build_5127.should_not >= @v1_6_0
     end
 
     it "determines whether it is less than or equal to another instance" do
-      pending
-
-      @v1.should <= @v2
-      @v4.should_not <= $v3
-      @v2.should <= @v2
-      @v3.should_not <= @v1
+      @v1_5_9_pre_1.should <= @v1_5_9_pre_1_build_5127
+      @v1_6_0.should_not <= @v1_5_9
+      @v1_5_9_pre_1_build_5127.should <= @v1_5_9_pre_1_build_5127
+      @v1_5_9.should_not <= @v1_5_9_pre_1
     end
 
-    it "determines whether it is exactly equal to another instance" do
-      @v1.should == @v1.dup
-      @v2.should == @v2.dup
+    it "determines whether it is semantically equal to another instance" do
+      @v1_5_9_pre_1.should == @v1_5_9_pre_1.dup
+      @v1_5_9_pre_1_build_5127.should == @v1_5_9_pre_1_build_5127.dup
+
+      # "Semantically equal" is the keyword here; these are by definition not "equal" (different build), but should be treated as
+      # equal according to the spec.
+      @v1_5_9_pre_1_build_4352.should == @v1_5_9_pre_1_build_5127
+      @v1_5_9_pre_1_build_4352.should == @v1_5_9_pre_1
     end
   end
 
