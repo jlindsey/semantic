@@ -84,6 +84,8 @@ describe Semantic::Version do
       (@v1_5_9_pre_1 <=> @v1_5_9).should == -1
       (@v1_5_9_pre_1_build_5127 <=> @v1_5_9).should == -1
 
+      @v1_5_9_pre_1_build_5127.build.should == 'build.5127'
+
       (@v1_5_9 <=> @v1_5_9).should == 0
 
       (@v1_5_9 <=> @v1_6_0).should == -1
