@@ -47,12 +47,10 @@ module Semantic
       # The build must be excluded from the comparison, so that e.g. 1.2.3+foo and 1.2.3+bar are semantically equal.
       # "Build metadata SHOULD be ignored when determining version precedence".
       # (SemVer 2.0.0-rc.2, paragraph 10 - http://www.semver.org)
-      result = compare_recursively(
-        self.tap { |v| v.build = nil }.to_a,
-        other_version.tap { |v| v.build = nil }.to_a
+      compare_recursively(
+        self.tap { |v| v.dup.build = nil }.to_a,
+        other_version.tap { |v| v.dup.build = nil }.to_a
       )
-
-      result
     end
 
     def > other_version
