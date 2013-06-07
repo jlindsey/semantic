@@ -5,7 +5,7 @@ module Semantic
     attr_accessor :major, :minor, :patch, :pre, :build
 
     def initialize version_str
-      raise ArgumentError.new("Not a valid SemVer Version (http://semver.org)") unless version_str =~ SemVerRegexp
+      raise ArgumentError.new("#{version_str} is not a valid SemVer Version (http://semver.org)") unless version_str =~ SemVerRegexp
 
       version, parts = version_str.split '-'
       if not parts.nil? and parts.include? '+'
