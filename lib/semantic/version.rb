@@ -43,7 +43,16 @@ module Semantic
 
     def <=> other_version
       other_version = Version.new(other_version) if other_version.is_a? String
-      compare_recursively self.to_a.dup, other_version.to_a.dup
+
+      # The build must be excluded from the comparison, so that e.g. 1.2.3+foo and 1.2.3+bar are semantically equal.
+      # "Build metadata SHOULD be ignored when determining version precedence".
+      # (SemVer 2.0.0-rc.2, paragraph 10 - http://www.semver.org)
+      result = compare_recursively(
+        self.tap { |v| v.build = nil }.to_a,
+        other_version.tap { |v| v.build = nil }.to_a
+      )
+
+      result
     end
 
     def > other_version
@@ -77,21 +86,20 @@ module Semantic
       # Reached the end of the arrays, equal all the way down
       return 0 if a.nil? and b.nil?
 
-      # Mismatched types (ie. one has a build and the other doesn't)
+      # Mismatched types (ie. one has a pre and the other doesn't)
       if a.nil? and not b.nil?
-        return -1
+        return 1
       elsif not a.nil? and b.nil?
-        return 1
-      end
-
-      # Less or greater than
-      if a > b
-        return 1
-      elsif a < b
         return -1
       end
 
-      # Recurse down to the next part if equal
+      if a < b
+        return -1
+      elsif a > b
+        return 1
+      end
+
+      # Versions are equal thus far, so recurse down to the next part.
       compare_recursively ary1, ary2
     end
   end
