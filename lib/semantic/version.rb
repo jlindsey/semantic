@@ -44,13 +44,16 @@ module Semantic
     def <=> other_version
       other_version = Version.new(other_version) if other_version.is_a? String
 
+      v1 = self.dup
+      v2 = other_version.dup
+
       # The build must be excluded from the comparison, so that e.g. 1.2.3+foo and 1.2.3+bar are semantically equal.
       # "Build metadata SHOULD be ignored when determining version precedence".
       # (SemVer 2.0.0-rc.2, paragraph 10 - http://www.semver.org)
-      compare_recursively(
-        self.tap { |v| v.dup.build = nil }.to_a,
-        other_version.tap { |v| v.dup.build = nil }.to_a
-      )
+      v1.build = nil
+      v2.build = nil
+
+      compare_recursively(v1.to_a, v2.to_a)
     end
 
     def > other_version
