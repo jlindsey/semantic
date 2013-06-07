@@ -47,23 +47,23 @@ module Semantic
     end
 
     def > other_version
-      if (self <=> other_version) == 1 then true else false end
+      (self <=> other_version) == 1
     end
 
     def < other_version
-      if (self <=> other_version) == -1 then true else false end
+      (self <=> other_version) == -1
     end
 
     def >= other_version
-      if (self <=> other_version) >= 0 then true else false end
+      (self <=> other_version) >= 0
     end
 
     def <= other_version
-      if (self <=> other_version) <= 0 then true else false end
+      (self <=> other_version) <= 0
     end
 
     def == other_version
-      if (self <=> other_version) == 0 then true else false end
+      (self <=> other_version) == 0
     end
 
     private
