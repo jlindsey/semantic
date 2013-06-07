@@ -74,6 +74,9 @@ describe Semantic::Version do
     end
 
     it "determines sort order" do
+      # The second parameter here can be a string, so we want to ensure that this kind of comparison works also.
+      (@v1 <=> @v1.to_s).should == 0
+
       (@v1 <=> @v2).should == 0
       (@v1 <=> @v3).should == 1
       (@v2 <=> @v3).should == 1
