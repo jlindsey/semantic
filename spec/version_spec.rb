@@ -78,13 +78,13 @@ describe Semantic::Version do
       (@v1 <=> @v1.to_s).should == 0
 
       (@v1 <=> @v2).should == 0
-      (@v1 <=> @v3).should == 1
-      (@v2 <=> @v3).should == 1
+      (@v1 <=> @v3).should == -1
+      (@v2 <=> @v3).should == -1
 
       (@v3 <=> @v3).should == 0
 
-      (@v3 <=> @v4).should == 1
-      (@v4 <=> @v3).should == -1
+      (@v3 <=> @v4).should == -1
+      (@v4 <=> @v3).should == 1
       (@v4 <=> @v1).should == 1
       (@v1 <=> @v4).should == -1
 
@@ -93,7 +93,7 @@ describe Semantic::Version do
 
     it "determines whether it is greater than another instance" do
       # These should be equal, since "Build metadata SHOULD be ignored when determining version precedence".
-      # (SemVer 2.0.0-rc.2, paragraph 10)
+      # (SemVer 2.0.0-rc.2, paragraph 10 - http://www.semver.org)
       @v1.should_not > @v2
       @v1.should_not < @v2
 
