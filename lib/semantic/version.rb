@@ -16,7 +16,7 @@ class Semantic::Version
     end
 
 
-    @major, @minor, @patch = version.split('.').map &:to_i
+    @major, @minor, @patch = version.split('.').map(&:to_i)
   end
 
   def to_a
