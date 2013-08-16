@@ -29,14 +29,14 @@ describe 'Core Extensions' do
 
     it "converts the String into a Version object" do
       @test_versions.each do |v|
-        expect { v.to_version }.to_not raise_error(ArgumentError)
+        expect { v.to_version }.to_not raise_error()
         v.to_version.should be_a(Semantic::Version)
       end
     end
 
     it "raises an error on invalid strings" do
       @bad_versions.each do |v|
-        expect { v.to_version }.to raise_error(ArgumentError)
+        expect { v.to_version }.to raise_error()
       end
     end
   end

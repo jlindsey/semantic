@@ -24,13 +24,13 @@ describe Semantic::Version do
   context "parsing" do
     it "parses valid SemVer versions" do
       @test_versions.each do |v|
-        expect { Semantic::Version.new v }.to_not raise_error(ArgumentError)
+        expect { Semantic::Version.new v }.to_not raise_error()
       end
     end
 
     it "raises an error on invalid versions" do
       @bad_versions.each do |v|
-        expect { Semantic::Version.new v }.to raise_error(ArgumentError)
+        expect { Semantic::Version.new v }.to raise_error()
       end
     end
 
