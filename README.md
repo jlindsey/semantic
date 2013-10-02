@@ -39,5 +39,5 @@ require 'semantic/core_ext'
 
 License
 -------
-Copyright (c) 2012 Josh Lindsey. See LICENSE for details.
+Copyright (c) 2012 Josh Lindsey. See [LICENSE](LICENSE) for details.
 
