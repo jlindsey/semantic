@@ -1,7 +1,7 @@
 # See: http://semver.org
 module Semantic
   class Version
-    SemVerRegexp = /^(\d+\.\d+\.\d+)(-([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?(\+([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?$/
+    SemVerRegexp = /\A(\d+\.\d+\.\d+)(-([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?(\+([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?\Z/
     attr_accessor :major, :minor, :patch, :pre, :build
 
     def initialize version_str

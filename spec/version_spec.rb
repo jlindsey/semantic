@@ -17,7 +17,8 @@ describe Semantic::Version do
       '1.a.3',
       'a.3.4',
       '5.2.a',
-      'pre3-1.5.3'
+      'pre3-1.5.3',
+      "I am not a valid semver\n0.0.0\nbut I still pass"
     ]
   end
 
