@@ -76,7 +76,31 @@ module Semantic
       (self <=> other_version) == 0
     end
 
+    def satisfies other_version
+      parts = other_version.split /(\d.+)/, 2
+      comparator, other_version_string = parts[0].strip, parts[1].strip
+      if comparator.empty?
+        self == other_version
+      else
+        satisfies_comparator comparator, other_version_string
+      end
+    end
+
     private
+
+    def tilde_matches? other_version_string
+      this_parts = to_a.collect &:to_s
+      other_parts = other_version_string.split('.')
+      other_parts == this_parts[0..other_parts.length-1]
+    end
+
+    def satisfies_comparator comparator, other_version_string
+      if comparator == '~'
+        tilde_matches? other_version_string
+      else
+        self.send comparator, other_version_string
+      end
+    end
 
     def compare_recursively ary1, ary2
       # Short-circuit the recursion entirely if they're just equal
@@ -105,4 +129,3 @@ module Semantic
     end
   end
 end
-
