@@ -83,10 +83,10 @@ module Semantic
       begin
         Version.new other_version_string
         comparator.empty? && comparator = '=='
-        satisfies_comparator comparator, other_version_string
+        satisfies_comparator? comparator, other_version_string
       rescue ArgumentError
         if ['<', '>', '<=', '>='].include?(comparator)
-          satisfies_comparator comparator, pad_version_string(other_version_string)
+          satisfies_comparator? comparator, pad_version_string(other_version_string)
         else
           tilde_matches? other_version_string
         end
@@ -109,7 +109,7 @@ module Semantic
       other_parts == this_parts[0..other_parts.length-1]
     end
 
-    def satisfies_comparator comparator, other_version_string
+    def satisfies_comparator? comparator, other_version_string
       if comparator == '~'
         tilde_matches? other_version_string
       else
