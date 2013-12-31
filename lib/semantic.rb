@@ -1,5 +1,5 @@
 module Semantic
-  GEM_VERSION = '1.2.1'
+  GEM_VERSION = '1.3.0'
   autoload :Version, 'semantic/version'
 end
 
