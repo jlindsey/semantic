@@ -148,29 +148,29 @@ describe Semantic::Version do
     end
 
     it "determines whether it satisfies >= style specifications" do
-      @v1_6_0.satisfies('>=1.6.0').should be_true
-      @v1_6_0.satisfies('<=1.6.0').should be_true
-      @v1_6_0.satisfies('>=1.5.0').should be_true
-      @v1_6_0.satisfies('<=1.5.0').should_not be_true
+      @v1_6_0.satisfies('>=1.6.0').should be true
+      @v1_6_0.satisfies('<=1.6.0').should be true
+      @v1_6_0.satisfies('>=1.5.0').should be true
+      @v1_6_0.satisfies('<=1.5.0').should_not be true
 
       # partial / non-semver numbers after comparator are extremely common in
       # version specifications in the wild
 
-      @v1_6_0.satisfies('>1.5').should be_true
-      @v1_6_0.satisfies('<1').should_not be_true
+      @v1_6_0.satisfies('>1.5').should be true
+      @v1_6_0.satisfies('<1').should_not be true
     end
 
     it "determines whether it satisfies * style specifications" do
-      @v1_6_0.satisfies('1.*').should be_true
-      @v1_6_0.satisfies('1.6.*').should be_true
-      @v1_6_0.satisfies('2.*').should_not be_true
-      @v1_6_0.satisfies('1.5.*').should_not be_true
+      @v1_6_0.satisfies('1.*').should be true
+      @v1_6_0.satisfies('1.6.*').should be true
+      @v1_6_0.satisfies('2.*').should_not be true
+      @v1_6_0.satisfies('1.5.*').should_not be true
     end
 
     it "determines whether it satisfies ~ style specifications" do
-      @v1_6_0.satisfies('~1.6').should be_true
-      @v1_5_9_pre_1.satisfies('~1.5').should be_true
-      @v1_6_0.satisfies('~1.5').should_not be_true
+      @v1_6_0.satisfies('~1.6').should be true
+      @v1_5_9_pre_1.satisfies('~1.5').should be true
+      @v1_6_0.satisfies('~1.5').should_not be true
     end
 
   end
