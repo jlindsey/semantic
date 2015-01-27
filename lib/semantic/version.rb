@@ -94,6 +94,22 @@ module Semantic
       end
     end
 
+    [:major, :minor, :patch].each do |term|
+      define_method("#{term}!") { increment!(term) }
+    end
+
+    def increment!(term)
+      new_version = clone
+      new_value = send(term) + 1
+
+      new_version.send("#{term}=", new_value)
+      new_version.minor = 0 if term == :major
+      new_version.patch = 0 if term == :major || term == :minor
+      new_version.build = new_version.pre = nil
+
+      new_version
+    end
+
     private
 
     def pad_version_string version_string
