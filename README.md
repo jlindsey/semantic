@@ -1,5 +1,6 @@
 Semantic
 ========
+[![BuildStatus](https://travis-ci.org/jlindsey/semantic.svg?branch=master)](https://travis-ci.org/jlindsey/semantic)
 
 A small Ruby utility class to aid in the storage, parsing, and comparison of SemVer-style Version strings.
 
