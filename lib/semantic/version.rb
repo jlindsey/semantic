@@ -20,6 +20,10 @@ module Semantic
       @major, @minor, @patch = version.split('.').map(&:to_i)
     end
 
+    def build=(b)
+      @build = (!b.nil? && b.empty?) ? nil : b
+    end
+
     def to_a
       [@major, @minor, @patch, @pre, @build]
     end

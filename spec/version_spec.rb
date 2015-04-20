@@ -64,6 +64,18 @@ describe Semantic::Version do
       v4.pre.should be_nil
       v4.build.should == 'hello'
     end
+    
+    it "provides round-trip fidelity for an empty build parameter" do
+      v = Semantic::Version.new("1.2.3")
+      v.build = ""
+      expect(Semantic::Version.new(v.to_s).build).to eq(v.build)
+    end
+
+    it "provides round-trip fidelity for a nil build parameter" do
+      v = Semantic::Version.new("1.2.3+build")
+      v.build = nil
+      expect(Semantic::Version.new(v.to_s).build).to eq(v.build)
+    end
   end
 
   context "comparisons" do
