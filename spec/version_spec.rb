@@ -64,7 +64,7 @@ describe Semantic::Version do
       v4.pre.should be_nil
       v4.build.should == 'hello'
     end
-    
+
     it "provides round-trip fidelity for an empty build parameter" do
       v = Semantic::Version.new("1.2.3")
       v.build = ""
@@ -224,7 +224,7 @@ describe Semantic::Version do
     end
   end
 
-  describe '#minor' do
+  describe '#minor!' do
     subject { described_class.new('1.2.3-pre1+build2') }
 
     context 'changing the minor term' do
@@ -234,7 +234,7 @@ describe Semantic::Version do
     end
   end
 
-  describe '#patch' do
+  describe '#patch!' do
     subject { described_class.new('1.2.3-pre1+build2') }
 
     context 'changing the patch term' do
