@@ -243,4 +243,22 @@ describe Semantic::Version do
       end
     end
   end
+
+  describe '#increment!' do
+    subject { described_class.new('1.2.3-pre1+build2') }
+
+    context 'changing the minor term' do
+      context 'with a string' do
+        it 'changes the minor term and resets the path, pre and build' do
+          subject.increment!('minor').should == '1.3.0'
+        end
+      end
+
+      context 'with a symbol' do
+        it 'changes the minor term and resets the path, pre and build' do
+          subject.increment!(:minor).should == '1.3.0'
+        end
+      end
+    end
+  end
 end
