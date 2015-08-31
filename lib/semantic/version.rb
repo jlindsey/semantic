@@ -45,6 +45,14 @@ module Semantic
     alias to_array to_a
     alias to_string to_s
 
+    def hash
+      to_a.hash
+    end
+
+    def eql? other_version
+      self.hash == other_version.hash
+    end
+
     def <=> other_version
       other_version = Version.new(other_version) if other_version.is_a? String
 

@@ -64,7 +64,7 @@ describe Semantic::Version do
       v4.pre.should be_nil
       v4.build.should == 'hello'
     end
-    
+
     it "provides round-trip fidelity for an empty build parameter" do
       v = Semantic::Version.new("1.2.3")
       v.build = ""
@@ -212,6 +212,12 @@ describe Semantic::Version do
       v = Semantic::Version.new('0.0.0')
       [:to_hash, :to_array, :to_string].each { |sym| v.should respond_to(sym) }
     end
+  end
+
+  it "as hash key" do
+    hash = {}
+    hash[Semantic::Version.new("1.2.3-pre1+build2")] = "semantic"
+    hash[Semantic::Version.new("1.2.3-pre1+build2")].should eq "semantic"
   end
 
   describe '#major!' do
