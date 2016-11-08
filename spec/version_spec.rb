@@ -214,6 +214,12 @@ describe Semantic::Version do
     end
   end
 
+  it "as hash key" do
+    hash = {}
+    hash[Semantic::Version.new("1.2.3-pre1+build2")] = "semantic"
+    hash[Semantic::Version.new("1.2.3-pre1+build2")].should eq "semantic"
+  end
+
   describe '#major!' do
     subject { described_class.new('1.2.3-pre1+build2') }
 
