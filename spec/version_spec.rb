@@ -1,5 +1,5 @@
 require 'spec_helper'
-
+# rubocop:disable Metrics/BlockLength, Style/VariableNumber
 describe Semantic::Version do
   before(:each) do
     @test_versions = [
@@ -22,63 +22,66 @@ describe Semantic::Version do
     ]
   end
 
-  context "parsing" do
-    it "parses valid SemVer versions" do
+  context 'parsing' do
+    it 'parses valid SemVer versions' do
       @test_versions.each do |v|
-        expect { Semantic::Version.new v }.to_not raise_error()
+        expect { Semantic::Version.new v }.not_to raise_error
       end
     end
 
-    it "raises an error on invalid versions" do
+    it 'raises an error on invalid versions' do
       @bad_versions.each do |v|
-        expect { Semantic::Version.new v }.to raise_error()
+        expect { Semantic::Version.new v }.to raise_error(
+          ArgumentError,
+          /not a valid SemVer/
+        )
       end
     end
 
-    it "stores parsed versions in member variables" do
+    it 'stores parsed versions in member variables' do
       v1 = Semantic::Version.new '1.5.9'
-      v1.major.should == 1
-      v1.minor.should == 5
-      v1.patch.should == 9
-      v1.pre.should be_nil
-      v1.build.should be_nil
+      expect(v1.major).to eq(1)
+      expect(v1.minor).to eq(5)
+      expect(v1.patch).to eq(9)
+      expect(v1.pre).to be_nil
+      expect(v1.build).to be_nil
 
       v2 = Semantic::Version.new '0.0.1-pre.1'
-      v2.major.should == 0
-      v2.minor.should == 0
-      v2.patch.should == 1
-      v2.pre.should == 'pre.1'
-      v2.build.should be_nil
+      expect(v2.major).to eq(0)
+      expect(v2.minor).to eq(0)
+      expect(v2.patch).to eq(1)
+      expect(v2.pre).to eq('pre.1')
+      expect(v2.build).to be_nil
 
       v3 = Semantic::Version.new '1.0.1-pre.5+build.123.5'
-      v3.major.should == 1
-      v3.minor.should == 0
-      v3.patch.should == 1
-      v3.pre.should == 'pre.5'
-      v3.build.should == 'build.123.5'
+      expect(v3.major).to eq(1)
+      expect(v3.minor).to eq(0)
+      expect(v3.patch).to eq(1)
+      expect(v3.pre).to eq('pre.5')
+      expect(v3.build).to eq('build.123.5')
 
       v4 = Semantic::Version.new '0.0.0+hello'
-      v4.major.should == 0
-      v4.minor.should == 0
-      v4.patch.should == 0
-      v4.pre.should be_nil
-      v4.build.should == 'hello'
+      expect(v4.major).to eq(0)
+      expect(v4.minor).to eq(0)
+      expect(v4.patch).to eq(0)
+      expect(v4.pre).to be_nil
+      expect(v4.build).to eq('hello')
     end
 
-    it "provides round-trip fidelity for an empty build parameter" do
-      v = Semantic::Version.new("1.2.3")
-      v.build = ""
+    it 'provides round-trip fidelity for an empty build parameter' do
+      v = Semantic::Version.new('1.2.3')
+      v.build = ''
       expect(Semantic::Version.new(v.to_s).build).to eq(v.build)
     end
 
-    it "provides round-trip fidelity for a nil build parameter" do
-      v = Semantic::Version.new("1.2.3+build")
+    it 'provides round-trip fidelity for a nil build parameter' do
+      v = Semantic::Version.new('1.2.3+build')
       v.build = nil
       expect(Semantic::Version.new(v.to_s).build).to eq(v.build)
     end
   end
 
-  context "comparisons" do
+  context 'comparisons' do
     before(:each) do
       # These three are all semantically equivalent, according to the spec.
       @v1_5_9_pre_1 = Semantic::Version.new '1.5.9-pre.1'
@@ -96,145 +99,156 @@ describe Semantic::Version do
       @v1_6_0_beta_11 = Semantic::Version.new '1.6.0-beta.11'
       @v1_6_0_rc_1 = Semantic::Version.new '1.6.0-rc.1'
 
-
       # expected order:
-      # 1.6.0-alpha < 1.6.0-alpha.1 < 1.6.0-alpha.beta < 1.6.0-beta < 1.6.0-beta.2 < 1.6.0-beta.11 < 1.6.0-rc.1 < 1.6.0.
+      # 1.6.0-alpha < 1.6.0-alpha.1 < 1.6.0-alpha.beta < 1.6.0-beta
+      # < 1.6.0-beta.2 < 1.6.0-beta.11 < 1.6.0-rc.1 < 1.6.0.
     end
 
-    it "determines sort order" do
-      # The second parameter here can be a string, so we want to ensure that this kind of comparison works also.
-      (@v1_5_9_pre_1 <=> @v1_5_9_pre_1.to_s).should == 0
+    it 'determines sort order' do
+      # The second parameter here can be a string, so we want to ensure that
+      # this kind of comparison works also.
+      expect((@v1_5_9_pre_1 <=> @v1_5_9_pre_1.to_s)).to eq(0)
 
-      (@v1_5_9_pre_1 <=> @v1_5_9_pre_1_build_5127).should == 0
-      (@v1_5_9_pre_1 <=> @v1_5_9).should == -1
-      (@v1_5_9_pre_1_build_5127 <=> @v1_5_9).should == -1
+      expect((@v1_5_9_pre_1 <=> @v1_5_9_pre_1_build_5127)).to eq(0)
+      expect((@v1_5_9_pre_1 <=> @v1_5_9)).to eq(-1)
+      expect((@v1_5_9_pre_1_build_5127 <=> @v1_5_9)).to eq(-1)
 
-      @v1_5_9_pre_1_build_5127.build.should == 'build.5127'
+      expect(@v1_5_9_pre_1_build_5127.build).to eq('build.5127')
 
-      (@v1_5_9 <=> @v1_5_9).should == 0
+      expect((@v1_5_9 <=> @v1_6_0)).to eq(-1)
+      expect((@v1_6_0 <=> @v1_5_9)).to eq(1)
+      expect((@v1_6_0 <=> @v1_5_9_pre_1)).to eq(1)
+      expect((@v1_5_9_pre_1 <=> @v1_6_0)).to eq(-1)
 
-      (@v1_5_9 <=> @v1_6_0).should == -1
-      (@v1_6_0 <=> @v1_5_9).should == 1
-      (@v1_6_0 <=> @v1_5_9_pre_1).should == 1
-      (@v1_5_9_pre_1 <=> @v1_6_0).should == -1
-
-      [@v1_5_9_pre_1, @v1_5_9_pre_1_build_5127, @v1_5_9, @v1_6_0]
-        .reverse
-        .sort
-        .should == [@v1_5_9_pre_1, @v1_5_9_pre_1_build_5127, @v1_5_9, @v1_6_0]
+      expect([@v1_5_9_pre_1, @v1_5_9_pre_1_build_5127, @v1_5_9, @v1_6_0]
+        .reverse.sort).to \
+          eq([@v1_5_9_pre_1, @v1_5_9_pre_1_build_5127, @v1_5_9, @v1_6_0])
     end
 
-    it "determines sort order pre" do
-      [@v1_6_0_alpha, @v1_6_0_alpha_1, @v1_6_0_alpha_beta, @v1_6_0_beta, @v1_6_0_beta_2, @v1_6_0_beta_11, @v1_6_0, @v1_6_0_rc_1].shuffle.sort.should ==
-        [@v1_6_0_alpha, @v1_6_0_alpha_1, @v1_6_0_alpha_beta, @v1_6_0_beta, @v1_6_0_beta_2, @v1_6_0_beta_11, @v1_6_0_rc_1, @v1_6_0]
+    it 'determines sort order pre' do
+      ary = [@v1_6_0_alpha, @v1_6_0_alpha_1, @v1_6_0_alpha_beta,
+             @v1_6_0_beta, @v1_6_0_beta_2, @v1_6_0_beta_11, @v1_6_0_rc_1,
+             @v1_6_0]
+      expect(ary.shuffle.sort).to eq(ary)
     end
 
-    it "determines whether it is greater than another instance" do
-      # These should be equal, since "Build metadata SHOULD be ignored when determining version precedence".
+    it 'determines whether it is greater than another instance' do
+      # These should be equal, since "Build metadata SHOULD be ignored
+      # when determining version precedence".
       # (SemVer 2.0.0-rc.2, paragraph 10 - http://www.semver.org)
-      @v1_5_9_pre_1.should_not > @v1_5_9_pre_1_build_5127
-      @v1_5_9_pre_1.should_not < @v1_5_9_pre_1_build_5127
+      expect(@v1_5_9_pre_1).not_to be > @v1_5_9_pre_1_build_5127
+      expect(@v1_5_9_pre_1).not_to be < @v1_5_9_pre_1_build_5127
 
-      @v1_6_0.should > @v1_5_9
-      @v1_5_9.should_not > @v1_6_0
-      @v1_5_9.should > @v1_5_9_pre_1_build_5127
-      @v1_5_9.should > @v1_5_9_pre_1
+      expect(@v1_6_0).to be > @v1_5_9
+      expect(@v1_5_9).not_to be > @v1_6_0
+      expect(@v1_5_9).to be > @v1_5_9_pre_1_build_5127
+      expect(@v1_5_9).to be > @v1_5_9_pre_1
     end
 
-    it "determines whether it is less than another instance" do
-      @v1_5_9_pre_1.should_not < @v1_5_9_pre_1_build_5127
-      @v1_5_9_pre_1_build_5127.should_not < @v1_5_9_pre_1
-      @v1_5_9_pre_1.should < @v1_5_9
-      @v1_5_9_pre_1.should < @v1_6_0
-      @v1_5_9_pre_1_build_5127.should < @v1_6_0
-      @v1_5_9.should < @v1_6_0
+    it 'determines whether it is less than another instance' do
+      expect(@v1_5_9_pre_1).not_to be < @v1_5_9_pre_1_build_5127
+      expect(@v1_5_9_pre_1_build_5127).not_to be < @v1_5_9_pre_1
+      expect(@v1_5_9_pre_1).to be < @v1_5_9
+      expect(@v1_5_9_pre_1).to be < @v1_6_0
+      expect(@v1_5_9_pre_1_build_5127).to be < @v1_6_0
+      expect(@v1_5_9).to be < @v1_6_0
     end
 
-    it "determines whether it is greater than or equal to another instance" do
-      @v1_5_9_pre_1.should >= @v1_5_9_pre_1
-      @v1_5_9_pre_1.should >= @v1_5_9_pre_1_build_5127
-      @v1_5_9_pre_1_build_5127.should >= @v1_5_9_pre_1
-      @v1_5_9.should >= @v1_5_9_pre_1
-      @v1_6_0.should >= @v1_5_9
-      @v1_5_9_pre_1_build_5127.should_not >= @v1_6_0
+    it 'determines whether it is greater than or equal to another instance' do
+      expect(@v1_5_9_pre_1).to be >= @v1_5_9_pre_1
+      expect(@v1_5_9_pre_1).to be >= @v1_5_9_pre_1_build_5127
+      expect(@v1_5_9_pre_1_build_5127).to be >= @v1_5_9_pre_1
+      expect(@v1_5_9).to be >= @v1_5_9_pre_1
+      expect(@v1_6_0).to be >= @v1_5_9
+      expect(@v1_5_9_pre_1_build_5127).not_to be >= @v1_6_0
     end
 
-    it "determines whether it is less than or equal to another instance" do
-      @v1_5_9_pre_1.should <= @v1_5_9_pre_1_build_5127
-      @v1_6_0.should_not <= @v1_5_9
-      @v1_5_9_pre_1_build_5127.should <= @v1_5_9_pre_1_build_5127
-      @v1_5_9.should_not <= @v1_5_9_pre_1
+    it 'determines whether it is less than or equal to another instance' do
+      expect(@v1_5_9_pre_1).to be <= @v1_5_9_pre_1_build_5127
+      expect(@v1_6_0).not_to be <= @v1_5_9
+      expect(@v1_5_9_pre_1_build_5127).to be <= @v1_5_9_pre_1_build_5127
+      expect(@v1_5_9).not_to be <= @v1_5_9_pre_1
     end
 
-    it "determines whether it is semantically equal to another instance" do
-      @v1_5_9_pre_1.should == @v1_5_9_pre_1.dup
-      @v1_5_9_pre_1_build_5127.should == @v1_5_9_pre_1_build_5127.dup
+    it 'determines whether it is semantically equal to another instance' do
+      expect(@v1_5_9_pre_1).to eq(@v1_5_9_pre_1.dup)
+      expect(@v1_5_9_pre_1_build_5127).to eq(@v1_5_9_pre_1_build_5127.dup)
 
-      # "Semantically equal" is the keyword here; these are by definition not "equal" (different build), but should be treated as
+      # "Semantically equal" is the keyword here; these are by definition
+      # not "equal" (different build), but should be treated as
       # equal according to the spec.
-      @v1_5_9_pre_1_build_4352.should == @v1_5_9_pre_1_build_5127
-      @v1_5_9_pre_1_build_4352.should == @v1_5_9_pre_1
+      expect(@v1_5_9_pre_1_build_4352).to eq(@v1_5_9_pre_1_build_5127)
+      expect(@v1_5_9_pre_1_build_4352).to eq(@v1_5_9_pre_1)
     end
 
-    it "determines whether it satisfies >= style specifications" do
-      @v1_6_0.satisfies('>=1.6.0').should be true
-      @v1_6_0.satisfies('<=1.6.0').should be true
-      @v1_6_0.satisfies('>=1.5.0').should be true
-      @v1_6_0.satisfies('<=1.5.0').should_not be true
+    it 'determines whether it satisfies >= style specifications' do
+      expect(@v1_6_0.satisfies('>=1.6.0')).to be true
+      expect(@v1_6_0.satisfies('<=1.6.0')).to be true
+      expect(@v1_6_0.satisfies('>=1.5.0')).to be true
+      expect(@v1_6_0.satisfies('<=1.5.0')).not_to be true
 
       # partial / non-semver numbers after comparator are extremely common in
       # version specifications in the wild
 
-      @v1_6_0.satisfies('>1.5').should be true
-      @v1_6_0.satisfies('<1').should_not be true
+      expect(@v1_6_0.satisfies('>1.5')).to be true
+      expect(@v1_6_0.satisfies('<1')).not_to be true
     end
 
-    it "determines whether it satisfies * style specifications" do
-      @v1_6_0.satisfies('1.*').should be true
-      @v1_6_0.satisfies('1.6.*').should be true
-      @v1_6_0.satisfies('2.*').should_not be true
-      @v1_6_0.satisfies('1.5.*').should_not be true
+    it 'determines whether it satisfies * style specifications' do
+      expect(@v1_6_0.satisfies('1.*')).to be true
+      expect(@v1_6_0.satisfies('1.6.*')).to be true
+      expect(@v1_6_0.satisfies('2.*')).not_to be true
+      expect(@v1_6_0.satisfies('1.5.*')).not_to be true
     end
 
-    it "determines whether it satisfies ~ style specifications" do
-      @v1_6_0.satisfies('~1.6').should be true
-      @v1_5_9_pre_1.satisfies('~1.5').should be true
-      @v1_6_0.satisfies('~1.5').should_not be true
+    it 'determines whether it satisfies ~ style specifications' do
+      expect(@v1_6_0.satisfies('~1.6')).to be true
+      expect(@v1_5_9_pre_1.satisfies('~1.5')).to be true
+      expect(@v1_6_0.satisfies('~1.5')).not_to be true
     end
-
   end
 
-  context "type coercions" do
-    it "converts to a string" do
+  context 'type coercions' do
+    it 'converts to a string' do
       @test_versions.each do |v|
-        Semantic::Version.new(v).to_s.should == v
+        expect(Semantic::Version.new(v).to_s).to be == v
       end
     end
 
-    it "converts to an array" do
-      Semantic::Version.new('1.0.0').to_a.should == [1, 0, 0, nil, nil]
-      Semantic::Version.new('6.1.4-pre.5').to_a.should == [6, 1, 4, 'pre.5', nil]
-      Semantic::Version.new('91.6.0+build.17').to_a.should == [91, 6, 0, nil, 'build.17']
-      Semantic::Version.new('0.1.5-pre.7+build191').to_a.should == [0, 1, 5, 'pre.7', 'build191']
+    it 'converts to an array' do
+      expect(Semantic::Version.new('1.0.0').to_a).to \
+        eq([1, 0, 0, nil, nil])
+      expect(Semantic::Version.new('6.1.4-pre.5').to_a).to \
+        eq([6, 1, 4, 'pre.5', nil])
+      expect(Semantic::Version.new('91.6.0+build.17').to_a).to \
+        eq([91, 6, 0, nil, 'build.17'])
+      expect(Semantic::Version.new('0.1.5-pre.7+build191').to_a).to \
+        eq([0, 1, 5, 'pre.7', 'build191'])
     end
 
-    it "converts to a hash" do
-      Semantic::Version.new('1.0.0').to_h.should == { major: 1, minor: 0, patch: 0, pre: nil, build: nil }
-      Semantic::Version.new('6.1.4-pre.5').to_h.should == { major: 6, minor: 1, patch: 4, pre: 'pre.5', build: nil }
-      Semantic::Version.new('91.6.0+build.17').to_h.should == { major: 91, minor: 6, patch: 0, pre: nil, build: 'build.17' }
-      Semantic::Version.new('0.1.5-pre.7+build191').to_h.should == { major: 0, minor: 1, patch: 5, pre: 'pre.7', build: 'build191' }
+    it 'converts to a hash' do
+      expect(Semantic::Version.new('1.0.0').to_h).to \
+        eq(major: 1, minor: 0, patch: 0, pre: nil, build: nil)
+      expect(Semantic::Version.new('6.1.4-pre.5').to_h).to \
+        eq(major: 6, minor: 1, patch: 4, pre: 'pre.5', build: nil)
+      expect(Semantic::Version.new('91.6.0+build.17').to_h).to \
+        eq(major: 91, minor: 6, patch: 0, pre: nil, build: 'build.17')
+      expect(Semantic::Version.new('0.1.5-pre.7+build191').to_h).to \
+        eq(major: 0, minor: 1, patch: 5, pre: 'pre.7', build: 'build191')
     end
 
-    it "aliases conversion methods" do
+    it 'aliases conversion methods' do
       v = Semantic::Version.new('0.0.0')
-      [:to_hash, :to_array, :to_string].each { |sym| v.should respond_to(sym) }
+      [:to_hash, :to_array, :to_string].each do |sym|
+        expect(v).to respond_to(sym)
+      end
     end
   end
 
-  it "as hash key" do
+  it 'as hash key' do
     hash = {}
-    hash[Semantic::Version.new("1.2.3-pre1+build2")] = "semantic"
-    hash[Semantic::Version.new("1.2.3-pre1+build2")].should eq "semantic"
+    hash[Semantic::Version.new('1.2.3-pre1+build2')] = 'semantic'
+    expect(hash[Semantic::Version.new('1.2.3-pre1+build2')]).to eq('semantic')
   end
 
   describe '#major!' do
@@ -242,7 +256,7 @@ describe Semantic::Version do
 
     context 'changing the major term' do
       it 'changes the major version and resets the others' do
-        subject.major!.should == '2.0.0'
+        expect(subject.major!).to eq('2.0.0')
       end
     end
   end
@@ -252,7 +266,7 @@ describe Semantic::Version do
 
     context 'changing the minor term' do
       it 'changes minor term and resets patch, pre and build' do
-        subject.minor!.should == '1.3.0'
+        expect(subject.minor!).to eq('1.3.0')
       end
     end
   end
@@ -262,7 +276,7 @@ describe Semantic::Version do
 
     context 'changing the patch term' do
       it 'changes the patch term and resets the pre and build' do
-        subject.patch!.should == '1.2.4'
+        expect(subject.patch!).to eq('1.2.4')
       end
     end
   end
@@ -273,13 +287,13 @@ describe Semantic::Version do
     context 'changing the minor term' do
       context 'with a string' do
         it 'changes the minor term and resets the path, pre and build' do
-          subject.increment!('minor').should == '1.3.0'
+          expect(subject.increment!('minor')).to eq('1.3.0')
         end
       end
 
       context 'with a symbol' do
         it 'changes the minor term and resets the path, pre and build' do
-          subject.increment!(:minor).should == '1.3.0'
+          expect(subject.increment!(:minor)).to eq('1.3.0')
         end
       end
     end

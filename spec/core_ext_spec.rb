@@ -1,8 +1,9 @@
 require 'spec_helper'
 require 'semantic/core_ext'
 
+# rubocop:disable Metrics/BlockLength
 describe 'Core Extensions' do
-  context "String#to_version" do
+  context 'String#to_version' do
     before(:each) do
       @test_versions = [
         '1.0.0',
@@ -23,20 +24,23 @@ describe 'Core Extensions' do
       ]
     end
 
-    it "extends String with a #to_version method" do
-      String.new.should respond_to(:to_version)
+    it 'extends String with a #to_version method' do
+      expect('').to respond_to(:to_version)
     end
 
-    it "converts the String into a Version object" do
+    it 'converts the String into a Version object' do
       @test_versions.each do |v|
-        expect { v.to_version }.to_not raise_error()
-        v.to_version.should be_a(Semantic::Version)
+        expect { v.to_version }.to_not raise_error
+        expect(v.to_version).to be_a(Semantic::Version)
       end
     end
 
-    it "raises an error on invalid strings" do
+    it 'raises an error on invalid strings' do
       @bad_versions.each do |v|
-        expect { v.to_version }.to raise_error()
+        expect { v.to_version }.to raise_error(
+          ArgumentError,
+          /not a valid SemVer/
+        )
       end
     end
   end
