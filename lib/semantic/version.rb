@@ -2,12 +2,15 @@
 module Semantic
   class Version
     SemVerRegexp = /\A(\d+\.\d+\.\d+)(-([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?(\+([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?\Z/
-    attr_accessor :major, :minor, :patch, :pre, :build
+    attr_accessor :major, :minor, :patch, :pre
+    attr_reader :build
 
     def initialize version_str
       raise ArgumentError.new("#{version_str} is not a valid SemVer Version (http://semver.org)") unless version_str =~ SemVerRegexp
 
       version, parts = version_str.split '-'
+      @pre = nil
+      @build = nil
       if not parts.nil? and parts.include? '+'
         @pre, @build = parts.split '+'
       elsif version.include? '+'
