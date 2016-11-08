@@ -1,30 +1,52 @@
 # See: http://semver.org
 module Semantic
   class Version
-    SemVerRegexp = /\A(\d+\.\d+\.\d+)(-([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?(\+([0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*))?\Z/
-    attr_accessor :major, :minor, :patch, :pre
-    attr_reader :build
+    SemVerRegexp = /\A(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][a-zA-Z0-9-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][a-zA-Z0-9-]*))*))?(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?\Z/
+
+
+    attr_accessor :major, :minor, :patch, :pre, :build
 
     def initialize version_str
-      raise ArgumentError.new("#{version_str} is not a valid SemVer Version (http://semver.org)") unless version_str =~ SemVerRegexp
+      v = version_str.match(SemVerRegexp)
 
-      version, parts = version_str.split '-'
-      @pre = nil
-      @build = nil
-      if not parts.nil? and parts.include? '+'
-        @pre, @build = parts.split '+'
-      elsif version.include? '+'
-        version, @build = version.split '+'
-      else
-        @pre = parts
-      end
-
-
-      @major, @minor, @patch = version.split('.').map(&:to_i)
+      raise ArgumentError.new("#{version_str} is not a valid SemVer Version (http://semver.org)") if v.nil?
+      @major = v[1].to_i
+      @minor = v[2].to_i
+      @patch = v[3].to_i
+      @pre = v[4]
+      @build = v[5]
+      @version = version_str
     end
+
 
     def build=(b)
       @build = (!b.nil? && b.empty?) ? nil : b
+    end
+
+    def identifiers(pre)
+      array = pre.split(".")
+      array.each_with_index {|e,i| array[i] = Integer(e) if /\A\d+\z/.match(e)}
+      return array
+    end
+
+    def compare_pre(prea, preb)
+      if prea.nil? || preb.nil?
+        return 0 if prea.nil? && preb.nil?
+        return 1 if prea.nil?
+        return -1 if preb.nil?
+      end
+      a = identifiers(prea)
+      b = identifiers(preb)
+      smallest = a.size < b.size ? a : b
+      smallest.each_with_index do |e, i|
+        c = a[i] <=> b[i]
+        if c.nil?
+          return a[i].is_a?(Integer) ? -1 : 1
+        elsif c != 0
+          return c
+        end
+      end
+      return a.size <=> b.size
     end
 
     def to_a
@@ -35,7 +57,6 @@ module Semantic
       str = [@major, @minor, @patch].join '.'
       str << '-' << @pre unless @pre.nil?
       str << '+' << @build unless @build.nil?
-
       str
     end
 
@@ -58,17 +79,13 @@ module Semantic
 
     def <=> other_version
       other_version = Version.new(other_version) if other_version.is_a? String
-
-      v1 = self.dup
-      v2 = other_version.dup
-
-      # The build must be excluded from the comparison, so that e.g. 1.2.3+foo and 1.2.3+bar are semantically equal.
-      # "Build metadata SHOULD be ignored when determining version precedence".
-      # (SemVer 2.0.0-rc.2, paragraph 10 - http://www.semver.org)
-      v1.build = nil
-      v2.build = nil
-
-      compare_recursively(v1.to_a, v2.to_a)
+      [:major, :minor, :patch].each do |part|
+        c = (self.send(part) <=> other_version.send(part))
+        if c != 0
+          return c
+        end
+      end
+      return compare_pre(self.pre, other_version.pre)
     end
 
     def > other_version
@@ -150,30 +167,5 @@ module Semantic
       end
     end
 
-    def compare_recursively ary1, ary2
-      # Short-circuit the recursion entirely if they're just equal
-      return 0 if ary1 == ary2
-
-      a = ary1.shift; b = ary2.shift
-
-      # Reached the end of the arrays, equal all the way down
-      return 0 if a.nil? and b.nil?
-
-      # Mismatched types (ie. one has a pre and the other doesn't)
-      if a.nil? and not b.nil?
-        return 1
-      elsif not a.nil? and b.nil?
-        return -1
-      end
-
-      if a < b
-        return -1
-      elsif a > b
-        return 1
-      end
-
-      # Versions are equal thus far, so recurse down to the next part.
-      compare_recursively ary1, ary2
-    end
   end
 end
