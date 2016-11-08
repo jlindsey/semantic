@@ -87,6 +87,18 @@ describe Semantic::Version do
 
       @v1_5_9 = Semantic::Version.new '1.5.9'
       @v1_6_0 = Semantic::Version.new '1.6.0'
+
+      @v1_6_0_alpha = Semantic::Version.new '1.6.0-alpha'
+      @v1_6_0_alpha_1 = Semantic::Version.new '1.6.0-alpha.1'
+      @v1_6_0_alpha_beta = Semantic::Version.new '1.6.0-alpha.beta'
+      @v1_6_0_beta = Semantic::Version.new '1.6.0-beta'
+      @v1_6_0_beta_2 = Semantic::Version.new '1.6.0-beta.2'
+      @v1_6_0_beta_11 = Semantic::Version.new '1.6.0-beta.11'
+      @v1_6_0_rc_1 = Semantic::Version.new '1.6.0-rc.1'
+
+
+      # expected order:
+      # 1.6.0-alpha < 1.6.0-alpha.1 < 1.6.0-alpha.beta < 1.6.0-beta < 1.6.0-beta.2 < 1.6.0-beta.11 < 1.6.0-rc.1 < 1.6.0.
     end
 
     it "determines sort order" do
@@ -110,6 +122,11 @@ describe Semantic::Version do
         .reverse
         .sort
         .should == [@v1_5_9_pre_1, @v1_5_9_pre_1_build_5127, @v1_5_9, @v1_6_0]
+    end
+
+    it "determines sort order pre" do
+      [@v1_6_0_alpha, @v1_6_0_alpha_1, @v1_6_0_alpha_beta, @v1_6_0_beta, @v1_6_0_beta_2, @v1_6_0_beta_11, @v1_6_0, @v1_6_0_rc_1].shuffle.sort.should ==
+        [@v1_6_0_alpha, @v1_6_0_alpha_1, @v1_6_0_alpha_beta, @v1_6_0_beta, @v1_6_0_beta_2, @v1_6_0_beta_11, @v1_6_0_rc_1, @v1_6_0]
     end
 
     it "determines whether it is greater than another instance" do
