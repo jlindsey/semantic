@@ -103,6 +103,7 @@ module Semantic
     end
 
     def increment!(term)
+      term = term.to_sym
       new_version = clone
       new_value = send(term) + 1
 
