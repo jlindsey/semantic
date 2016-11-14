@@ -181,6 +181,11 @@ describe Semantic::Version do
       expect(@v1_5_9_pre_1_build_4352).to eq(@v1_5_9_pre_1)
     end
 
+    it 'determines whether it is between two others instance' do
+      expect(@v1_5_9).to be_between @v1_5_9_pre_1, @v1_6_0
+      expect(@v1_5_9).to_not be_between @v1_6_0, @v1_6_0_beta
+    end
+
     it 'determines whether it satisfies >= style specifications' do
       expect(@v1_6_0.satisfies('>=1.6.0')).to be true
       expect(@v1_6_0.satisfies('<=1.6.0')).to be true

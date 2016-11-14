@@ -1,6 +1,8 @@
 # See: http://semver.org
 module Semantic
   class Version
+    include Comparable
+
     SemVerRegexp = /\A(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][a-zA-Z0-9-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][a-zA-Z0-9-]*))*))?(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?\Z/
 
 
@@ -86,26 +88,6 @@ module Semantic
         end
       end
       return compare_pre(self.pre, other_version.pre)
-    end
-
-    def > other_version
-      (self <=> other_version) == 1
-    end
-
-    def < other_version
-      (self <=> other_version) == -1
-    end
-
-    def >= other_version
-      (self <=> other_version) >= 0
-    end
-
-    def <= other_version
-      (self <=> other_version) <= 0
-    end
-
-    def == other_version
-      (self <=> other_version) == 0
     end
 
     def satisfies other_version
