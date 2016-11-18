@@ -187,29 +187,29 @@ describe Semantic::Version do
     end
 
     it 'determines whether it satisfies >= style specifications' do
-      expect(@v1_6_0.satisfies('>=1.6.0')).to be true
-      expect(@v1_6_0.satisfies('<=1.6.0')).to be true
-      expect(@v1_6_0.satisfies('>=1.5.0')).to be true
-      expect(@v1_6_0.satisfies('<=1.5.0')).not_to be true
+      expect(@v1_6_0.satisfies?('>=1.6.0')).to be true
+      expect(@v1_6_0.satisfies?('<=1.6.0')).to be true
+      expect(@v1_6_0.satisfies?('>=1.5.0')).to be true
+      expect(@v1_6_0.satisfies?('<=1.5.0')).not_to be true
 
       # partial / non-semver numbers after comparator are extremely common in
       # version specifications in the wild
 
-      expect(@v1_6_0.satisfies('>1.5')).to be true
-      expect(@v1_6_0.satisfies('<1')).not_to be true
+      expect(@v1_6_0.satisfies?('>1.5')).to be true
+      expect(@v1_6_0.satisfies?('<1')).not_to be true
     end
 
     it 'determines whether it satisfies * style specifications' do
-      expect(@v1_6_0.satisfies('1.*')).to be true
-      expect(@v1_6_0.satisfies('1.6.*')).to be true
-      expect(@v1_6_0.satisfies('2.*')).not_to be true
-      expect(@v1_6_0.satisfies('1.5.*')).not_to be true
+      expect(@v1_6_0.satisfies?('1.*')).to be true
+      expect(@v1_6_0.satisfies?('1.6.*')).to be true
+      expect(@v1_6_0.satisfies?('2.*')).not_to be true
+      expect(@v1_6_0.satisfies?('1.5.*')).not_to be true
     end
 
     it 'determines whether it satisfies ~ style specifications' do
-      expect(@v1_6_0.satisfies('~1.6')).to be true
-      expect(@v1_5_9_pre_1.satisfies('~1.5')).to be true
-      expect(@v1_6_0.satisfies('~1.5')).not_to be true
+      expect(@v1_6_0.satisfies?('~1.6')).to be true
+      expect(@v1_5_9_pre_1.satisfies?('~1.5')).to be true
+      expect(@v1_6_0.satisfies?('~1.5')).not_to be true
     end
   end
 
