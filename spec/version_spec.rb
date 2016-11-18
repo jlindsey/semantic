@@ -211,6 +211,29 @@ describe Semantic::Version do
       expect(@v1_5_9_pre_1.satisfies('~1.5')).to be true
       expect(@v1_6_0.satisfies('~1.5')).not_to be true
     end
+
+    it 'determines whether version is satisfies by range of bound versions' do
+      v5_2_1 = Semantic::Version.new('5.2.1')
+      v5_3_0 = Semantic::Version.new('5.3.0')
+      v6_0_1 = Semantic::Version.new('6.0.1')
+      range = [
+        ">= 5.2.1",
+        "<= 6.0.0"
+      ]
+
+      expect(v5_2_1.satisfied_by?(range)).to be true
+      expect(v5_3_0.satisfied_by?(range)).to be true
+      expect(v6_0_1.satisfied_by?(range)).to be false
+    end
+
+    it 'raises error if the input is not an array of versions' do
+      v5_2_1 = Semantic::Version.new('5.2.1')
+      range = ">= 5.2.1 <= 6.0.0"
+      expect { v5_2_1.satisfied_by?(range) }.to raise_error(
+        ArgumentError,
+        /should be an array of versions/
+      )
+    end
   end
 
   context 'type coercions' do

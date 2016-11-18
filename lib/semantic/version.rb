@@ -108,6 +108,11 @@ module Semantic
       end
     end
 
+    def satisfied_by? versions
+      raise ArgumentError.new("Versions #{versions} should be an array of versions") unless versions.is_a? Array
+      versions.all? { |version| satisfies(version) }
+    end
+
     [:major, :minor, :patch].each do |term|
       define_method("#{term}!") { increment!(term) }
     end
