@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.name          = "semantic"
   s.version       = Semantic::GEM_VERSION
   s.authors       = ["Josh Lindsey"]
-  s.email         = ["josh@core-apps.com"]
+  s.email         = ["joshua.s.lindsey@gmail.com"]
   s.homepage      = "https://github.com/jlindsey/semantic"
   s.summary       = %q{Semantic Version utility class}
   s.description   = %q{Semantic Version utility class for parsing, storing, and comparing versions. See: http://semver.org}
