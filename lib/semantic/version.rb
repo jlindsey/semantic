@@ -102,6 +102,8 @@ module Semantic
       rescue ArgumentError
         if ['<', '>', '<=', '>='].include?(comparator)
           satisfies_comparator? comparator, pad_version_string(other_version_string)
+        elsif comparator == '~>'
+          pessimistic_match? other_version_string
         else
           tilde_matches? other_version_string
         end
@@ -146,12 +148,31 @@ module Semantic
       other_parts == this_parts[0..other_parts.length-1]
     end
 
+    def pessimistic_match? other_version_string
+      other_parts = other_version_string.split('.')
+      unless other_parts.size == 2 || other_parts.size == 3
+        raise ArgumentError.new("Version #{other_version_string} should not be applied with a pessimistic operator")
+      end
+      other_parts.pop
+      other_parts << (other_parts.pop.to_i + 1).to_s
+      satisfies_comparator?('>=', semverified(other_version_string)) && satisfies_comparator?('<', semverified(other_parts.join('.')))
+    end
+
     def satisfies_comparator? comparator, other_version_string
       if comparator == '~'
         tilde_matches? other_version_string
+      elsif comparator == '~>'
+        pessimistic_match? other_version_string
       else
         self.send comparator, other_version_string
       end
+    end
+
+    def semverified version_string
+      parts = version_string.split('.')
+      raise ArgumentError.new("Version #{version_string} not supported by semverified") if parts.size > 3
+      (3 - parts.size).times { parts << '0' }
+      parts.join('.')
     end
 
   end

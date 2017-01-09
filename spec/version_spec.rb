@@ -212,6 +212,24 @@ describe Semantic::Version do
       expect(@v1_6_0.satisfies?('~1.5')).not_to be true
     end
 
+    it 'determines whether it satisfies ~> style specifications' do
+      expect(@v1_5_9_pre_1_build_5127.satisfies?('~> 1.4')).to be true
+      expect(@v1_5_9_pre_1_build_4352.satisfies?('~> 1.5.2')).to be true
+      expect(@v1_6_0_alpha_1.satisfies?('~> 1.4')).to be true
+
+      expect(@v1_5_9.satisfies?('~> 1.0')).to be true
+      expect(@v1_5_9.satisfies?('~> 1.4')).to be true
+      expect(Semantic::Version.new('1.99.1').satisfies?('~> 1.5')).to be true
+      expect(@v1_5_9.satisfies?('~> 1.5')).to be true
+      expect(@v1_5_9.satisfies?('~> 1.5.0')).to be true
+      expect(@v1_5_9.satisfies?('~> 1.5.8')).to be true
+      expect(@v1_5_9.satisfies?('~> 1.5.9')).to be true
+      expect(Semantic::Version.new('1.5.99').satisfies?('~> 1.5.9')).to be true
+      expect(@v1_5_9.satisfies?('~> 1.6.0')).to be false
+      expect(@v1_5_9.satisfies?('~> 1.6')).to be false
+      expect(@v1_5_9.satisfies?('~> 1.7')).to be false
+    end
+
     it 'determines whether version is satisfies by range of bound versions' do
       v5_2_1 = Semantic::Version.new('5.2.1')
       v5_3_0 = Semantic::Version.new('5.3.0')
