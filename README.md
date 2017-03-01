@@ -27,6 +27,10 @@ newer_version <=> version # => 1
 complex_version = Semantic::Version.new '3.7.9-pre.1+revision.15723'
 complex_version.pre       # => "pre.1"
 complex_version.build     # => "revision.15623"
+
+# semantic supports Pessimistic Operator
+version.satisfies? '~> 1.5'    # => true
+version.satisfies? '~> 1.6.0'  # => true
 ```
 
 There is also a set of core extensions as an optional require:
