@@ -87,6 +87,9 @@ describe Semantic::Version do
       @v1_5_9_pre_1 = Semantic::Version.new '1.5.9-pre.1'
       @v1_5_9_pre_1_build_5127 = Semantic::Version.new '1.5.9-pre.1+build.5127'
       @v1_5_9_pre_1_build_4352 = Semantic::Version.new '1.5.9-pre.1+build.4352'
+      # more pre syntax testing: "-"
+      @v3_13_0_75_generic = Semantic::Version.new '3.13.0-75-generic'
+      @v3_13_0_141_generic = Semantic::Version.new '3.13.0-141-generic'
 
       @v1_5_9 = Semantic::Version.new '1.5.9'
       @v1_6_0 = Semantic::Version.new '1.6.0'
@@ -130,6 +133,14 @@ describe Semantic::Version do
              @v1_6_0_beta, @v1_6_0_beta_2, @v1_6_0_beta_11, @v1_6_0_rc_1,
              @v1_6_0]
       expect(ary.shuffle.sort).to eq(ary)
+    end
+
+    it 'determine alternate char sep works in pre' do
+      expect((@v3_13_0_75_generic <=> @v3_13_0_141_generic.to_s)).to eq(-1)
+      expect((@v3_13_0_75_generic <=> @v3_13_0_141_generic)).to eq(-1)
+      expect((@v3_13_0_75_generic <=> '3.13.0-75-generic')).to eq(0)
+      expect((@v3_13_0_75_generic <=> '3.13.0-141-generic')).to eq(-1)
+      expect((@v3_13_0_141_generic <=> '3.13.0-75-generic')).to eq(1)
     end
 
     it 'determines whether it is greater than another instance' do
