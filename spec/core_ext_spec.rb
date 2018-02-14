@@ -43,5 +43,21 @@ describe 'Core Extensions' do
         )
       end
     end
+
+    it 'extends String with a #is_version? method' do
+      expect('').to respond_to(:is_version?)
+    end
+
+    it 'detects valid semantic version strings' do
+      @test_versions.each do |v|
+        expect(v.is_version?).to be true
+      end
+    end
+
+    it 'detects invalid semantic version strings' do
+      @bad_versions.each do |v|
+        expect(v.is_version?).to be false
+      end
+    end
   end
 end
