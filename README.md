@@ -31,6 +31,17 @@ complex_version.build     # => "revision.15623"
 # semantic supports Pessimistic Operator
 version.satisfies? '~> 1.5'    # => true
 version.satisfies? '~> 1.6.0'  # => true
+
+# incrementing version numbers
+version = Semantic::Version.new('0.1.0')
+new_version = version.increment!(:major)    # 1.1.0
+new_version = version.increment!(:minor)    # 0.2.0
+new_version = version.increment!(:patch)    # 0.1.1
+
+new_version = verstion.major!               # 1.1.0
+new_version = verstion.minor!               # 0.2.0
+new_version = verstion.patch!               # 0.1.1
+# (note: increment! & friends return a copy and leave the original unchanged)
 ```
 
 There is also a set of core extensions as an optional require:
