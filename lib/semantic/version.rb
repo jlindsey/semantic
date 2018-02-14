@@ -27,7 +27,7 @@ module Semantic
     end
 
     def identifiers(pre)
-      array = pre.split(".")
+      array = pre.split(/[\.\-]/)
       array.each_with_index {|e,i| array[i] = Integer(e) if /\A\d+\z/.match(e)}
       return array
     end
