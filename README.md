@@ -38,9 +38,9 @@ new_version = version.increment!(:major)    # 1.1.0
 new_version = version.increment!(:minor)    # 0.2.0
 new_version = version.increment!(:patch)    # 0.1.1
 
-new_version = verstion.major!               # 1.1.0
-new_version = verstion.minor!               # 0.2.0
-new_version = verstion.patch!               # 0.1.1
+new_version = version.major!               # 1.1.0
+new_version = version.minor!               # 0.2.0
+new_version = version.patch!               # 0.1.1
 # (note: increment! & friends return a copy and leave the original unchanged)
 ```
 
