@@ -4,6 +4,6 @@ class String
   end
 
   def is_version?
-    (match Semantic::Version::SemVerRegexp) ? true : false
+    Semantic::Version::SemVerRegexp.match? self
   end
 end
