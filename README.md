@@ -1,6 +1,7 @@
 Semantic
 ========
 [![BuildStatus](https://travis-ci.org/jlindsey/semantic.svg?branch=master)](https://travis-ci.org/jlindsey/semantic)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fjlindsey%2Fsemantic.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fjlindsey%2Fsemantic?ref=badge_shield)
 
 A small Ruby utility class to aid in the storage, parsing, and comparison of SemVer-style Version strings.
 
@@ -57,3 +58,7 @@ License
 -------
 Copyright (c) 2012 Josh Lindsey. See [LICENSE](LICENSE) for details.
 
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fjlindsey%2Fsemantic.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fjlindsey%2Fsemantic?ref=badge_large)
