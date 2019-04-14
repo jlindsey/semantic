@@ -60,12 +60,19 @@ describe Semantic::Version do
       expect(v3.pre).to eq('pre.5')
       expect(v3.build).to eq('build.123.5')
 
-      v4 = Semantic::Version.new '0.0.0+hello'
-      expect(v4.major).to eq(0)
+      v4 = Semantic::Version.new '1.0.1.pre.5+build.123.5'
+      expect(v4.major).to eq(1)
       expect(v4.minor).to eq(0)
-      expect(v4.patch).to eq(0)
-      expect(v4.pre).to be_nil
-      expect(v4.build).to eq('hello')
+      expect(v4.patch).to eq(1)
+      expect(v4.pre).to eq('pre.5')
+      expect(v4.build).to eq('build.123.5')
+
+      v5 = Semantic::Version.new '0.0.0+hello'
+      expect(v5.major).to eq(0)
+      expect(v5.minor).to eq(0)
+      expect(v5.patch).to eq(0)
+      expect(v5.pre).to be_nil
+      expect(v5.build).to eq('hello')
     end
 
     it 'provides round-trip fidelity for an empty build parameter' do
@@ -83,8 +90,9 @@ describe Semantic::Version do
 
   context 'comparisons' do
     before(:each) do
-      # These three are all semantically equivalent, according to the spec.
+      # These four are all semantically equivalent, according to the spec.
       @v1_5_9_pre_1 = Semantic::Version.new '1.5.9-pre.1'
+      @v1_5_9_pre_1_dot = Semantic::Version.new '1.5.9.pre.1'
       @v1_5_9_pre_1_build_5127 = Semantic::Version.new '1.5.9-pre.1+build.5127'
       @v1_5_9_pre_1_build_4352 = Semantic::Version.new '1.5.9-pre.1+build.4352'
       # more pre syntax testing: "-"
@@ -111,8 +119,10 @@ describe Semantic::Version do
       # The second parameter here can be a string, so we want to ensure that
       # this kind of comparison works also.
       expect((@v1_5_9_pre_1 <=> @v1_5_9_pre_1.to_s)).to eq(0)
+      expect((@v1_5_9_pre_1 <=> @v1_5_9_pre_1_dot.to_s)).to eq(0)
 
       expect((@v1_5_9_pre_1 <=> @v1_5_9_pre_1_build_5127)).to eq(0)
+      expect((@v1_5_9_pre_1_dot <=> @v1_5_9_pre_1_build_5127)).to eq(0)
       expect((@v1_5_9_pre_1 <=> @v1_5_9)).to eq(-1)
       expect((@v1_5_9_pre_1_build_5127 <=> @v1_5_9)).to eq(-1)
 
@@ -277,6 +287,8 @@ describe Semantic::Version do
         eq([1, 0, 0, nil, nil])
       expect(Semantic::Version.new('6.1.4-pre.5').to_a).to \
         eq([6, 1, 4, 'pre.5', nil])
+      expect(Semantic::Version.new('6.1.4.pre.5').to_a).to \
+        eq([6, 1, 4, 'pre.5', nil])
       expect(Semantic::Version.new('91.6.0+build.17').to_a).to \
         eq([91, 6, 0, nil, 'build.17'])
       expect(Semantic::Version.new('0.1.5-pre.7+build191').to_a).to \
@@ -287,6 +299,8 @@ describe Semantic::Version do
       expect(Semantic::Version.new('1.0.0').to_h).to \
         eq(major: 1, minor: 0, patch: 0, pre: nil, build: nil)
       expect(Semantic::Version.new('6.1.4-pre.5').to_h).to \
+        eq(major: 6, minor: 1, patch: 4, pre: 'pre.5', build: nil)
+        expect(Semantic::Version.new('6.1.4.pre.5').to_h).to \
         eq(major: 6, minor: 1, patch: 4, pre: 'pre.5', build: nil)
       expect(Semantic::Version.new('91.6.0+build.17').to_h).to \
         eq(major: 91, minor: 6, patch: 0, pre: nil, build: 'build.17')

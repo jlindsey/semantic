@@ -9,6 +9,7 @@ describe 'Core Extensions' do
         '1.0.0',
         '12.45.182',
         '0.0.1-pre.1',
+        '0.0.1.beta.2',
         '1.0.1-pre.5+build.123.5',
         '1.1.1+123',
         '0.0.0+hello',
