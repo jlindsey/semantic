@@ -93,6 +93,7 @@ module Semantic
 
     def satisfies? other_version
       return true if other_version.strip == '*'
+      return false unless other_version.match(/\d/)
       parts = other_version.split(/(\d(.+)?)/, 2)
       comparator, other_version_string = parts[0].strip, parts[1].strip
 
