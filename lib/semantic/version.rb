@@ -81,6 +81,8 @@ module Semantic
     end
 
     def <=> other_version
+      raise ArgumentError.new('Expected a type of Semantic::Version for comparison') if other_version.nil?
+
       other_version = Version.new(other_version) if other_version.is_a? String
       [:major, :minor, :patch].each do |part|
         c = (self.send(part) <=> other_version.send(part))
