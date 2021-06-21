@@ -263,6 +263,13 @@ describe Semantic::Version do
         /should be an array of versions/
       )
     end
+
+    it 'raises an ArugmentError when compared to nil' do
+      expect { @v1_5_9_pre_1 < nil }.to raise_error(ArgumentError)
+      expect { @v1_5_9_pre_1 > nil }.to raise_error(ArgumentError)
+      expect { @v1_5_9_pre_1 == nil }.to raise_error(ArgumentError)
+      expect { @v1_5_9_pre_1 <=> nil }.to raise_error(ArgumentError)
+    end
   end
 
   context 'type coercions' do
