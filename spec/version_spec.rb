@@ -38,6 +38,15 @@ describe Semantic::Version do
       end
     end
 
+    it 'raises an error when passed nil' do
+      @bad_versions.each do |v|
+        expect { Semantic::Version.new nil }.to raise_error(
+          ArgumentError,
+          /not a valid SemVer/
+        )
+      end
+    end
+
     it 'stores parsed versions in member variables' do
       v1 = Semantic::Version.new '1.5.9'
       expect(v1.major).to eq(1)
