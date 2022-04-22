@@ -10,9 +10,8 @@ module Semantic
     attr_reader :build
 
     def initialize version_str
-      v = version_str.match(SemVerRegexp)
+      v = parse_version_string!(version_str)
 
-      raise ArgumentError.new("#{version_str} is not a valid SemVer Version (http://semver.org)") if v.nil?
       @major = v[1].to_i
       @minor = v[2].to_i
       @patch = v[3].to_i
@@ -174,6 +173,14 @@ module Semantic
       raise ArgumentError.new("Version #{version_string} not supported by semverified") if parts.size > 3
       (3 - parts.size).times { parts << '0' }
       parts.join('.')
+    end
+
+    def parse_version_string! version_str
+      if !version_str.nil? && version = version_str.match(SemVerRegexp)
+        version
+      else
+        raise ArgumentError.new("#{version_str} is not a valid SemVer Version (http://semver.org)") if version.nil?
+      end
     end
 
   end
